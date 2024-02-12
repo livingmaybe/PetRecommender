@@ -1,4 +1,7 @@
 # Pet Recommendation Assistant
+Author: Nikhil Kapoor (nikkap@amazon.com, livingmaybe@me.com) Date: 02/10/2024
+
+[Not for public distribution]
 
 This samples application recommends pets suitable to our users bases on their personal circumstances from the all the pets currently available in our Pet Adoption Store.
 
