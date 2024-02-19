@@ -1,0 +1,202 @@
+{
+    "variables": [
+        {
+            "type": "property",
+            "property": "ModelId",
+            "inputType": "select",
+            "id": "ModelId",
+            "label": "ModelId",
+            "visible": true,
+            "search": "{AWS/Bedrock,ModelId} MetricName=Invocations",
+            "populateFrom": "ModelId"
+        }
+    ],
+    "widgets": [
+        {
+            "height": 6,
+            "width": 8,
+            "y": 0,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Bedrock", "InvocationLatency", "ModelId", "ai21.j2-mid-v1", { "region": "us-east-1", "yAxis": "right", "visible": false } ],
+                    [ "...", "anthropic.claude-v2", { "region": "us-east-1", "yAxis": "left", "period": 60 } ],
+                    [ "...", "stability.stable-diffusion-xl-v0", { "region": "us-east-1", "yAxis": "right", "visible": false } ],
+                    [ "...", "ai21.j2-ultra-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "amazon.titan-image-generator-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "amazon.titan-text-express-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "anthropic.claude-instant-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "anthropic.claude-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "anthropic.claude-v2:1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-embed-text-v1", { "region": "us-east-1", "period": 60, "visible": false } ],
+                    [ "...", "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-instant-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "meta.llama2-13b-chat-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "meta.llama2-70b-chat-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "stability.stable-diffusion-xl-v1", { "region": "us-east-1", "visible": false } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "us-east-1",
+                "period": 300,
+                "stat": "Average",
+                "yAxis": {
+                    "right": {
+                        "showUnits": false
+                    }
+                },
+                "title": "InvocationLatency"
+            }
+        },
+        {
+            "height": 6,
+            "width": 7,
+            "y": 0,
+            "x": 8,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Bedrock", "Invocations", "ModelId", "anthropic.claude-v2", { "region": "us-east-1" } ],
+                    [ "...", "arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-embed-text-v1", { "region": "us-east-1", "visible": false } ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "region": "us-east-1",
+                "period": 60,
+                "stat": "Sum",
+                "yAxis": {
+                    "left": {
+                        "label": "Count",
+                        "showUnits": false
+                    }
+                },
+                "title": "Invocations"
+            }
+        },
+        {
+            "height": 5,
+            "width": 10,
+            "y": 6,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Bedrock", "InputTokenCount", { "region": "us-east-1" } ],
+                    [ "AWS/Bedrock", "OutputTokenCount", { "region": "us-east-1" } ]
+                ],
+                "sparkline": false,
+                "view": "gauge",
+                "region": "us-east-1",
+                "yAxis": {
+                    "left": {
+                        "min": 20,
+                        "max": 10000
+                    }
+                },
+                "period": 60,
+                "stat": "Sum",
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "color": "#d62728",
+                            "label": "Above forecasts",
+                            "value": 7000,
+                            "fill": "above"
+                        },
+                        {
+                            "color": "#2ca02c",
+                            "label": "Untitled annotation",
+                            "value": 5000,
+                            "fill": "below"
+                        },
+                        [
+                            {
+                                "color": "#ff7f0e",
+                                "label": "Untitled annotation",
+                                "value": 5001
+                            },
+                            {
+                                "value": 6999,
+                                "label": "Untitled annotation"
+                            }
+                        ]
+                    ]
+                },
+                "title": "InputTokenCount, OutputTokenCount"
+            }
+        },
+        {
+            "height": 5,
+            "width": 14,
+            "y": 6,
+            "x": 10,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/test/textGeneration/Bedrock' | fields @timestamp, identity.arn, input.inputTokenCount, output.outputTokenCount\n| stats sum(input.inputTokenCount) as totalInputTokens, sum(output.outputTokenCount) as totalOutputTokens, count(*) as invocationCount by identity.arn",
+                "region": "us-east-1",
+                "stacked": false,
+                "title": "InvocationSummary by User",
+                "view": "table"
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 11,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Bedrock", "InvocationClientErrors", "ModelId", "anthropic.claude-v2", { "region": "us-east-1", "visible": false } ],
+                    [ "AWS/Bedrock", "InvocationServerErrors", "ModelId", "anthropic.claude-v2", { "region": "us-east-1", "visible": false } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "us-east-1",
+                "stat": "Sum",
+                "period": 60,
+                "title": "InvocationErrors"
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 11,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Bedrock", "InvocationThrottles", "ModelId", "anthropic.claude-v2", { "region": "us-east-1", "visible": false } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "us-east-1",
+                "stat": "Sum",
+                "period": 60,
+                "title": "InvocationThrottles"
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 0,
+            "x": 15,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Bedrock", "OutputTokenCount", "ModelId", "meta.llama2-13b-chat-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "anthropic.claude-v2", { "region": "us-east-1" } ],
+                    [ ".", "InputTokenCount", ".", "meta.llama2-13b-chat-v1", { "region": "us-east-1", "visible": false } ],
+                    [ "...", "anthropic.claude-v2", { "region": "us-east-1" } ],
+                    [ "...", "arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-embed-text-v1", { "region": "us-east-1", "visible": false } ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "region": "us-east-1",
+                "title": "Token usage",
+                "period": 300,
+                "stat": "Average"
+            }
+        }
+    ]
+}
